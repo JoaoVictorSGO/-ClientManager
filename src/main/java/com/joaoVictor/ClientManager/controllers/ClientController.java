@@ -6,6 +6,7 @@ import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,24 +32,30 @@ public class ClientController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ClientDTO> findById(@PathVariable Long id ){
-		return ResponseEntity.ok(service.findbyId(id));
+	public ResponseEntity<ClientDTO> buscarPorId(@PathVariable Long id ){
+		return ResponseEntity.ok(service.buscarPorId(id));
 	}
 	
 	@GetMapping
-	public ResponseEntity<Page<ClientDTO>> findAll(Pageable pegeble){
-		return ResponseEntity.ok(service.findAll(pegeble));
+	public ResponseEntity<Page<ClientDTO>> buscarTodos(Pageable pegeble){
+		return ResponseEntity.ok(service.buscarTodos(pegeble));
 	}
 	
 	@PostMapping
-	public ResponseEntity<ClientDTO> insert(@Valid @RequestBody ClientDTO dto) {
-		dto = service.insert(dto);
+	public ResponseEntity<ClientDTO> inserir(@Valid @RequestBody ClientDTO dto) {
+		dto = service.inserir(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
 	@PutMapping(value ="/{id}")
-	public ResponseEntity<ClientDTO> update(@PathVariable Long id, @Valid @RequestBody ClientDTO dto){
-		return ResponseEntity.ok(service.update(id, dto));
+	public ResponseEntity<ClientDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ClientDTO dto){
+		return ResponseEntity.ok(service.atualizar(id, dto));
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deletar(@PathVariable Long id) {
+		service.deletar(id);
+		return ResponseEntity.noContent().build();
 	}
 }
